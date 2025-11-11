@@ -1,0 +1,12 @@
+# Logs
+logs/
+
+# Local outputs / temporary files
+ntuples/
+salt_h5/
+preprocessed_h5/
+
+# Python cache / virtual environments
+__pycache__/
+*.pyc
+.env/
