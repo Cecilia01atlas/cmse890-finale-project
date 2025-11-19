@@ -10,3 +10,6 @@ preprocessed_h5/
 __pycache__/
 *.pyc
 .env/
+
+# Snakemake internal state
+.snakemake/

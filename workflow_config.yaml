@@ -7,4 +7,4 @@ custom_class: /afs/cern.ch/user/c/ceimthur/sm4tops-fastframe/SM4topsSSML
 
 # Where ntuples should be stored (EOS recommended)
 # Example: /eos/user/c/ceimthur/ntuples/Run3_config_DNN
-ntuples_eos_dir: /eos/user/c/ceimthur/ntuples/Run3_config_DNN
+ntuples_eos_dir: /eos/user/c/ceimthur/ntuples
