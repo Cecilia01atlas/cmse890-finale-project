@@ -1,0 +1,100 @@
+Step 1: FastFrame setup and ntuple production
+Input: FastFrame repository, YAML configuration defining samples and regions
+
+    - Clone the FastFrame repository from gitlab
+    - Run setup.sh --build to configure and build the environment
+    - Modify paths to input files and output directories in the configuration file to match the local setup
+    - Define and check the samples that are needed for the training
+    - Run the FastFrame configuration file to produce the ntuples
+
+    Step details:
+        1) Load configuration
+            - Read samples, regions, channels, features, and systematics
+            - Set luminosity and cross-section information
+
+        2) Event processing:
+            For each sample and each MC campaign:
+                - Compute normalization factors (cross-section / sum of weights)
+                - Loop over ROOT files:
+                    - Load file (FastFrame)
+                    - Apply object and event selection
+                    - Compute derived features (e.g. nBjets_85WP)
+                    - Apply region and channel definitions
+                    - Compute event weights (MC × pileup × scale factors)
+                    - Include systematic variations if needed
+                    - Store selected variables in ntuples
+
+        Output: ntuples (ROOT files)
+
+------------------------------------------------------------
+
+Step 2: Salt setup and HDF5 conversion
+Input: ntuples produced by FastFrame
+
+Environment setup:
+    - Clone the SALT repository
+    - Source the conda setup script: source setup/setup_conda.sh
+    - Create and activate SALT conda environment: mamba create -n salt python=3.11
+    - Install SALT in editable mode: python -m pip install -e .
+    - Source setup.sh to initialize environment variables
+
+    - Clone the dumper-to-salt repository
+    - Modify paths to input files and output directories in the configuration file to match the local setup
+    - Check the paths of the ntuples (Root Files) for each sample
+
+
+    Step details:
+        3) HDF5 conversion
+        - Load SALT configuration:
+            - Define samples:
+                - Signal: tttt
+                - Backgrounds: ttt, ttV (ttW, ttZ, ttH), otherbkg (Diboson, SingleTop, fake_inclusive, ttVV, Other)
+        - Loop over events in all files:
+            - Apply selection
+            - Extract features
+            - Compute weights and store sample/campaign metadata
+        - Save events into HDF5 datasets, including:
+            - 'jets' dataset (flat features)
+            - 'tracks' dataset (vector features)
+
+
+        Output: HDF5 datasets containing selected features and weights
+
+------------------------------------------------------------
+
+Step 3: Preprocessing with umami-preprocessing
+Input: HDF5 datasets
+
+Environment setup:
+    - Clone the umami-preprocessing repository
+    - Create and activate Python virtual environment: python3 -m venv upp; source upp/bin/activate
+    - Install Umami preprocessing package: pip install umami-preprocessing --no-cache-dir
+    - Install local project package: python -m pip install . --no-cache-dir
+    - Source setup.sh to initialize environment variables
+    - Copy flavours configuration:
+    - Check paths of input HDF5 files and output directories to match the local setup
+    - Run a configuration file for all 4 folds for cross-validation
+
+    Step details:
+        4) Load configuration
+            - Define global cuts for train/validation/test splits
+            - Define inclusive regions and number of jets per sample
+            - Define samples for each of the 4 different classes
+            - Set resampling strategy
+            - Define variables:
+                - Flat features ('jets'): nJets, nBjets, HT, MET, event flags, weights, sample ID
+                - Vector features ('tracks'): pt, eta, phi, PCBT, charge, isEl, isMu, isJet, isBottom, vertex_Tops, isFromTop
+
+        5) Preprocessing
+            - Load HDF5 datasets for all samples
+            - Apply global cuts to split events into train / validation / test sets
+            - Extract selected flat and vector features
+
+        6) Save processed datasets
+            - Store processed events in output directory
+            - Maintain separate datasets for 'jets' and 'tracks'
+            - Keep metadata: sample, campaign, event weights, labels
+
+    Output: Preprocessed HDF5 datasets (train/val/test) and normalization metadata
+
+------------------------------------------------------------
