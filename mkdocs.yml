@@ -1,6 +1,5 @@
 site_name: "SM4Tops FastFrame Workflow"
-use_directory_urls: false
-site_url: https://github.io/Cecilia01atlas/cmse890-finale-project
+site_url: https://Cecilia01atlas.github.io/cmse890-finale-project/
 
 theme:
   name: "readthedocs"
