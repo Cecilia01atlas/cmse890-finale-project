@@ -13,3 +13,6 @@ __pycache__/
 
 # Snakemake internal state
 .snakemake/
+
+# MkDocs build folder
+site/
