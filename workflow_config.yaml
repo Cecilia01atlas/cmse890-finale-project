@@ -20,3 +20,24 @@ samples:
   # - ttVV
   # - Other
   # - fake_inclusive
+
+h5_outputs:
+  tttt: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/tttt.h5
+  ttt: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttt.h5
+  ttW: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttW.h5
+  ttZ: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttZ.h5
+  ttH: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttH.h5
+  SingleTop: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/SingleTop.h5
+  Diboson: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/Diboson.h5
+  ttVV: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttVV.h5
+  Other: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/Other.h5
+  fake_inclusive: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/fake_inclusive.h5
+
+folds:
+  - fold0
+  - fold1
+  - fold2
+  - fold3
+
+# Directory where fold configs for preprocessing live
+preprocessing_config_dir: /afs/cern.ch/user/c/ceimthur/umami-preprocessing/upp/configs/SM4top_Run3

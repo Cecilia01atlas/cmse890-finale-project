@@ -5,13 +5,15 @@ FASTFRAME_CONFIG = config["fastframe_config"]
 CUSTOM_CLASS = config["custom_class"]
 NTUPLES_DIR = config["ntuples_eos_dir"]
 SAMPLES = config["samples"]
+FOLDS = config["folds"]
+CONF_DIR = config["preprocessing_config_dir"]
 
 ###########################################
 # FINAL TARGET
 ###########################################
 rule all:
     input:
-        expand("flags/dumper_{sample}.done", sample=SAMPLES)
+        "flags/preprocessing.done"
 
 ###########################################
 # 1. Submit FastFrames Ntuple Jobs
@@ -61,4 +63,22 @@ rule run_dumper:
         mkdir -p {params.log_dir}
         ./scripts/run_dumper.sh {params.log_dir} {wildcards.sample}
         touch flags/dumper_{wildcards.sample}.done
+        """
+
+##############################################
+# 4. Umami Preprocessing — requires H5 files
+##############################################
+rule run_preprocessing:
+    input:
+        "flags/ntuples_ready.flag",
+        expand("flags/dumper_{sample}.done", sample=config["samples"])
+    output:
+        touch("flags/preprocessing.done")
+    params:
+        log_dir="logs"
+    shell:
+        """
+        mkdir -p {params.log_dir}
+        ./scripts/run_preprocessing.sh {params.log_dir}
+        touch flags/preprocessing.done
         """
