@@ -10,13 +10,13 @@ custom_class: /afs/cern.ch/user/c/ceimthur/sm4tops-fastframe/SM4topsSSML
 ntuples_eos_dir: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/ntuples
 
 samples:
-  - tttt
-  - ttt
-  - ttW
+  # - tttt
+  # - ttt
+  # - ttW
   - ttZ
-  - ttH
-  - SingleTop
-  - Diboson
-  - ttVV
-  - Other
-  - fake_inclusive
+  # - ttH
+  # - SingleTop
+  # - Diboson
+  # - ttVV
+  # - Other
+  # - fake_inclusive

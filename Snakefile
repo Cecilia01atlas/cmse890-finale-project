@@ -58,6 +58,7 @@ rule run_dumper:
         log_dir="logs"
     shell:
         """
+        mkdir -p {params.log_dir}
         ./scripts/run_dumper.sh {params.log_dir} {wildcards.sample}
         touch flags/dumper_{wildcards.sample}.done
         """

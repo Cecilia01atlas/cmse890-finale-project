@@ -16,3 +16,6 @@ __pycache__/
 
 # MkDocs build folder
 site/
+
+# Flags
+flags
