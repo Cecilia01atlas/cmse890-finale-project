@@ -32,14 +32,14 @@ fastframe:
 # ==============================
 samples:
   - ttZ
-  # - tttt
-  # - ttW
-  # - ttH
-  # - SingleTop
-  # - Diboson
-  # - ttVV
-  # - Other
-  # - fake_inclusive
+  - tttt
+  - ttW
+  - ttH
+  - SingleTop
+  - Diboson
+  - ttVV
+  - Other
+  - fake_inclusive
 
 # ==============================
 # UMAMI PREPROCESSING
