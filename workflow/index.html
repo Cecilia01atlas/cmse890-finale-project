@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://Cecilia01atlas.github.io/cmse890-finale-project/workflow/" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Workflow Overview - SM4Tops FastFrame Workflow</title>
+    <title>Workflow Overview - SM4Tops MVA preprocessing Workflow</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -31,7 +31,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
     <div class="wy-side-scroll">
       <div class="wy-side-nav-search">
-          <a href=".." class="icon icon-home"> SM4Tops FastFrame Workflow
+          <a href=".." class="icon icon-home"> SM4Tops MVA preprocessing Workflow
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
       <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
@@ -75,6 +75,12 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#example-snakemake-command">Example Snakemake Command</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-testing-and-validation">Workflow Testing and Validation</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#generating-unit-tests">Generating Unit Tests</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -89,7 +95,7 @@
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
       <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="..">SM4Tops FastFrame Workflow</a>
+          <a href="..">SM4Tops MVA preprocessing Workflow</a>
         
       </nav>
       <div class="wy-nav-content">
@@ -193,6 +199,16 @@ These files allow Snakemake to:</p>
 <p>To execute only the initial stage (ntuple submission and availability check):</p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snakemake<span class="w"> </span>stage1-j1<span class="w"> </span>--latency-wait<span class="w"> </span><span class="m">60</span>
 </span></code></pre></div>
+<h2 id="workflow-testing-and-validation">Workflow Testing and Validation</h2>
+<p>Snakemake provides built-in support for <strong>automatic unit test generation</strong>, which can be used to validate that individual rules behave as expected.</p>
+<h3 id="generating-unit-tests">Generating Unit Tests</h3>
+<p>You can automatically generate unit tests for your workflow once you already run it using:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>snakemake<span class="w"> </span>--generate-unit-tests
+</span></code></pre></div>
+<p>This command will:<br />
+- Create a tests/ directory (if it does not exist)<br />
+- Generate test cases for individual rules based on their inputs and outputs
+- Capture expected file structure and execution logic</p>
               
             </div>
           </div><footer>
