@@ -26,3 +26,5 @@ Progress is tracked using **flag files**, allowing safe interruption and resumpt
 
 Full documentation for the workflow can be found here:
 https://Cecilia01atlas.github.io/cmse890-finale-project/
+
+**Final note:** I hereby declare that I used AI for the project, specifically ChatGPT 5.2. In more detail, AI was used to help with coding the Snakefile, wrapper files, and configuration file, and subsequently to debug the Snakemake workflow. In addition, it was also used to provide feedback on the structure and grammar of the documentation.
