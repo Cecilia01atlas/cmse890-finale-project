@@ -121,6 +121,7 @@ snakemake --generate-unit-tests
 ```
 
 This command will:  
+
 - Create a tests/ directory (if it does not exist)  
 - Generate test cases for individual rules based on their inputs and outputs
 - Capture expected file structure and execution logic
