@@ -107,3 +107,20 @@ To execute only the initial stage (ntuple submission and availability check):
 ```bash
 snakemake stage1-j1 --latency-wait 60
 ```
+
+## Workflow Testing and Validation
+
+Snakemake provides built-in support for **automatic unit test generation**, which can be used to validate that individual rules behave as expected.
+
+### Generating Unit Tests
+
+You can automatically generate unit tests for your workflow once you already run it using:
+
+```bash
+snakemake --generate-unit-tests
+```
+
+This command will:  
+- Create a tests/ directory (if it does not exist)  
+- Generate test cases for individual rules based on their inputs and outputs
+- Capture expected file structure and execution logic
