@@ -1,4 +1,5 @@
 #!/bin/bash
+# Wrapper to preprocess the HD5 files for the training later
 
 LOG_DIR="$1"
 LOG_DIR=$(readlink -f "$LOG_DIR")
@@ -12,7 +13,7 @@ source $ATLAS_LOCAL_ROOT_BASE/user/atlasLocalSetup.sh --quiet
 cd /afs/cern.ch/user/c/ceimthur/umami-preprocessing || exit 1
 source setup.sh
 
-# --- Run the official convert.sh that already loops over all folds ---
+# --- Run the official convert.sh to loops over all configuration files for every fold ---
 cd /afs/cern.ch/user/c/ceimthur/umami-preprocessing/scripts
 echo "Running preprocessing for ALL folds using convert.sh ..."
 bash convert.sh &> "${LOG_DIR}/preprocess_all.log"

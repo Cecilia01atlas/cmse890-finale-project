@@ -7,7 +7,7 @@ Welcome to the SM4Tops workflow documentation. This project provides a reproduci
 The goal of this workflow is to facilitate MVA training for four-top processes in the ATLAS experiment to improve the separation between signal and background. It includes:
 
 - Preprocessing MC samples with FastFrames
-- Producing analysis-ready ntuples by submitting jobs to HTCondor
+- Producing analysis-ready ntuples (Root files) by submitting jobs to HTCondor
 - Converting the ntuples into h5 files through dumper
 - Preparation of data that fits the input format for the training later in SALT using umami
 - Automating reproducible training steps for machine learning models

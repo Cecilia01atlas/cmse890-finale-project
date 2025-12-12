@@ -1,16 +1,17 @@
 #!/bin/bash
+# Wrapper to convert the ntuples to HD5 files
 
 LOG_DIR="$(realpath "$1")"
 SAMPLE="$2"
 
 mkdir -p "$LOG_DIR"
 
-# Go to SALT repo and source environment
+# --- Go to SALT repo and source conda environment ---
 cd /afs/cern.ch/user/c/ceimthur/salt || exit 1
 set --
 source setup.sh
 
-# Go to dumper-to-salt repo and run conversion
+# --- Go to dumper-to-salt repo and run the configuration file for theconversion ---
 cd /afs/cern.ch/user/c/ceimthur/dumper-to-salt || exit 1
 
 python dumper.py \

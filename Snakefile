@@ -48,6 +48,14 @@ rule all:
     input:
         "flags/preprocessing.done"
 
+# ======================================= 
+# STAGE 1 TARGET (OPTIONAL MANUAL STOP)
+# ========================================
+rule stage1:
+    input:
+        "flags/ntuples_ready.flag"
+
+
 # ==========================================================
 # RULE 1 — SUBMIT FASTFRAME NTUPLES
 # ==========================================================
@@ -94,9 +102,9 @@ rule wait_for_ntuples:
         touch {output}
         """
 
-# ==========================================================
-# RULE 3 — DUMPER → SALT (PER SAMPLE)
-# ==========================================================
+# ===========================================================
+# RULE 3 — Converting the ntuples to HD5 files: DUMPER → SALT
+# ===========================================================
 
 rule run_dumper:
     input:

@@ -26,13 +26,27 @@
     condor_rm <job_id>
     ```
 
-## Q3: Why do I need absolute paths in the configuration?
-
-- FastFrames and Snakemake both rely on **absolute paths** for reproducibility.
-- Using relative paths, especially for EOS/AFS storage, can break the workflow or cause file-not-found errors.
-
-## Q4: What if my logs don’t appear?
+## Q3: What if my logs don’t appear? 
 
 - Ensure the log directory exists and is writable.
 - If you run Condor jobs, logs may only appear after the job finishes on the batch system.
 - Check the wrapper script path and permissions.
+
+## Q4: Why does Snakemake skip the ntuple submission step?  
+  
+If the ntuple directory already exists in EOS:  
+- Submission is skipped  
+- A message is printed  
+- he workflow continues safely  
+  
+This prevents accidental double submission to HTCondor.
+
+## Q5: Snakemake says “Nothing to be done” but I expected more steps to run  
+This workflow uses flag files in the flags/ directory to track progress. If a flag exists, Snakemake assumes that step is complete.
+  
+- **Solution:**
+To re-run parts of the workflow, remove the flag files:  
+```bash
+    rm flags/*.flag  
+    rm flags/*.done
+    ```

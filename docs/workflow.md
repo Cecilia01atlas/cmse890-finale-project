@@ -16,6 +16,7 @@ The entire workflow is structured as a **Snakemake DAG**:
 - Skips submission automatically if the ntuple directory already exists  
 
 This step is asynchronous: once jobs are submitted, execution continues only after ntuples appear in EOS.
+
 ---
 
 ### 2. Ntuple Availability Check
