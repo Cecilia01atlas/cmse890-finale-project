@@ -46,7 +46,7 @@ This workflow uses flag files in the flags/ directory to track progress. If a fl
   
 - **Solution:**
 To re-run parts of the workflow, remove the flag files:  
-```bash
+    ```bash
     rm flags/*.flag  
     rm flags/*.done
     ```
