@@ -59,9 +59,11 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#q2-how-to-safely-cancel-running-condor-jobs">Q2: How to safely cancel running Condor jobs?</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#q3-why-do-i-need-absolute-paths-in-the-configuration">Q3: Why do I need absolute paths in the configuration?</a>
+    <li class="toctree-l2"><a class="reference internal" href="#q3-what-if-my-logs-dont-appear">Q3: What if my logs don’t appear?</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#q4-what-if-my-logs-dont-appear">Q4: What if my logs don’t appear?</a>
+    <li class="toctree-l2"><a class="reference internal" href="#q4-why-does-snakemake-skip-the-ntuple-submission-step">Q4: Why does Snakemake skip the ntuple submission step?</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#q5-snakemake-says-nothing-to-be-done-but-i-expected-more-steps-to-run">Q5: Snakemake says “Nothing to be done” but I expected more steps to run</a>
     </li>
     </ul>
                 </li>
@@ -115,16 +117,26 @@
     <div class="language-bash highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>condor_rm<span class="w"> </span>&lt;job_id&gt;
 </span></code></pre></div></li>
 </ul>
-<h2 id="q3-why-do-i-need-absolute-paths-in-the-configuration">Q3: Why do I need absolute paths in the configuration?</h2>
-<ul>
-<li>FastFrames and Snakemake both rely on <strong>absolute paths</strong> for reproducibility.</li>
-<li>Using relative paths, especially for EOS/AFS storage, can break the workflow or cause file-not-found errors.</li>
-</ul>
-<h2 id="q4-what-if-my-logs-dont-appear">Q4: What if my logs don’t appear?</h2>
+<h2 id="q3-what-if-my-logs-dont-appear">Q3: What if my logs don’t appear?</h2>
 <ul>
 <li>Ensure the log directory exists and is writable.</li>
 <li>If you run Condor jobs, logs may only appear after the job finishes on the batch system.</li>
 <li>Check the wrapper script path and permissions.</li>
+</ul>
+<h2 id="q4-why-does-snakemake-skip-the-ntuple-submission-step">Q4: Why does Snakemake skip the ntuple submission step?</h2>
+<p>If the ntuple directory already exists in EOS:<br />
+- Submission is skipped<br />
+- A message is printed<br />
+- he workflow continues safely  </p>
+<p>This prevents accidental double submission to HTCondor.</p>
+<h2 id="q5-snakemake-says-nothing-to-be-done-but-i-expected-more-steps-to-run">Q5: Snakemake says “Nothing to be done” but I expected more steps to run</h2>
+<p>This workflow uses flag files in the flags/ directory to track progress. If a flag exists, Snakemake assumes that step is complete.</p>
+<ul>
+<li><strong>Solution:</strong>
+To re-run parts of the workflow, remove the flag files:<br />
+<code>bash
+    rm flags/*.flag  
+    rm flags/*.done</code></li>
 </ul>
               
             </div>
