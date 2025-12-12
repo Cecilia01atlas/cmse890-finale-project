@@ -65,7 +65,7 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#5-create-and-activate-all-envrionments-environment">5. Create and activate all envrionments environment</a>
+    <li class="toctree-l2"><a class="reference internal" href="#5-activate-the-snakemake-environment">5. Activate the snakemake environment</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#6-test-the-installation">6. Test the installation</a>
     </li>
@@ -104,7 +104,7 @@
             <div class="section" itemprop="articleBody">
               
                 <h2 id="installation">Installation</h2>
-<p>In order to set up the SM4Tops workflow, the followoing steps are needed:</p>
+<p>In order to set up the SM4Tops workflow, the following steps are needed:</p>
 <h3 id="1-prerequisites">1. Prerequisites</h3>
 <p>This workflow assumes that all required external software environments are <strong>already installed and configured</strong>.<br />
 The workflow <strong>does not attempt to create or validate these environments automatically</strong>.</p>
@@ -120,21 +120,16 @@ The workflow <strong>does not attempt to create or validate these environments a
   Used to convert FastFrames ntuples into HDF5 files for MVA training.</p>
 </li>
 </ul>
-<p>Please refer to the official SALT documentation for detailed setup instructions:</p>
+<p>Please refer to the official SALT documentation for detailed setup instructions:
+  <a href="https://ftag-salt.docs.cern.ch/setup/"><strong>Official SALT documentation</strong></a></p>
 <ul>
-<li>
-<p><strong>SALT documentation:</strong><br />
-  https://ftag-salt.docs.cern.ch/setup/</p>
-</li>
-<li>
-<p><strong>Umami preprocessing</strong><br />
-  Used for preprocessing and fold splitting prior to training.</p>
-</li>
+<li><strong>Umami preprocessing</strong><br />
+  Used for preprocessing and fold splitting prior to training.</li>
 </ul>
 <p>The workflow assumes that:</p>
 <ul>
 <li><code>setup.sh</code> scripts for FastFrames, SALT, and Umami work when sourced manually</li>
-<li>salt envrionments and packages are installed</li>
+<li>SALT environments and packages are installed</li>
 <li>Required CVMFS and ATLAS tools are available</li>
 <li>EOS and AFS paths are accessible</li>
 <li>HTCondor is available for batch submission</li>
@@ -146,11 +141,11 @@ The workflow <strong>does not attempt to create or validate these environments a
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Cecilia01atlas/cmse890-finale-project.git
 </span></code></pre></div>
 <h3 id="3-clone-the-required-repositories">3. Clone the required repositories</h3>
-<p>This workflow relies the following four git repositories from the frag group, wich are hosted on GitLab:
-- fastframes
-- salt
-- dumper-to-salt
-- umami-preprocessing </p>
+<p>This workflow relies on the following four git repositories provided by the ATLAS ftag group, which are hosted on GitLab:
+- fastframes<br />
+- salt<br />
+- dumper-to-salt<br />
+- umami-preprocessing   </p>
 <p>Access requires CERN credentials! </p>
 <div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>clone<span class="w"> </span>https://gitlab.cern.ch/atlasphys-top/TopPlusX/ANA-TOPQ-2023-43/sm4tops-fastframe.git
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>clone<span class="w"> </span>ttps://gitlab.cern.ch/atlas-phys/exot/hqt/ana-exot-2022-44/ftag-based-mva/salt.git
@@ -194,9 +189,8 @@ It uses a small set of <strong>base paths</strong> (AFS, EOS, project name, anal
 <li><code>preprocessing_config_dir</code> – Directory with preprocessing YAML configs</li>
 </ul>
 <hr />
-<h3 id="5-create-and-activate-all-envrionments-environment">5. Create and activate all envrionments environment</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>env<span class="w"> </span>create<span class="w"> </span>-f<span class="w"> </span>environment.yaml
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>conda<span class="w"> </span>activate<span class="w"> </span>mva-workflow
+<h3 id="5-activate-the-snakemake-environment">5. Activate the snakemake environment</h3>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>conda<span class="w"> </span>activate<span class="w"> </span>&lt;envrionment-name&gt;
 </span></code></pre></div>
 <h3 id="6-test-the-installation">6. Test the installation</h3>
 <p>You can run Snakemake in dry-run mode to check that everything is configured correctly:</p>
