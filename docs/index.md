@@ -9,14 +9,14 @@ The goal of this workflow is to facilitate MVA training for four-top processes i
 - Preprocessing MC samples with FastFrames
 - Producing analysis-ready ntuples by submitting jobs to HTCondor
 - Converting the ntuples into h5 files through dumper
-- Preparation of data that fits the input format for the trianing later in SALT thorugh umami
+- Preparation of data that fits the input format for the training later in SALT using umami
 - Automating reproducible training steps for machine learning models
 
 This workflow is designed for researchers who want to:
 
 - Reproduce MVA training inputs reliably
 - Process large MC samples more efficiently
-- Resume long-running workflows safelyCan you 
+- Resume long-running workflows safely
 
 ## Workflow Overview
 

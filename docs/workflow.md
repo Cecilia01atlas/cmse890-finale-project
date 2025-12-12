@@ -13,7 +13,7 @@ The entire workflow is structured as a **Snakemake DAG**:
 - Reads a FastFrames configuration (e.g. `Run3_config_DNN.yml`)
 - Submits ntuple production jobs to **HTCondor**
 - Stores ntuples in **EOS**
-- Skips submission automatically if the ntuple directory already exists
+- Skips submission automatically if the ntuple directory already exists  
 
 This step is asynchronous: once jobs are submitted, execution continues only after ntuples appear in EOS.
 ---
@@ -32,7 +32,6 @@ This allows the workflow to be stopped and resumed safely.
 
 - Converts FastFrames ntuples into `.h5` files
 - Runs once per sample
-- Produces sample-level completion flags to ensure reproducibility
 
 ---
 

@@ -1,6 +1,6 @@
 ## Installation
 
-In order to set up the SM4Tops workflow, the followoing steps are needed:
+In order to set up the SM4Tops workflow, the following steps are needed:
 
 ### 1. Prerequisites
 
@@ -16,10 +16,8 @@ In particular, the following setups are required:
 - **SALT + dumper-to-SALT**  
   Used to convert FastFrames ntuples into HDF5 files for MVA training.
 
-Please refer to the official SALT documentation for detailed setup instructions:
-
-- **SALT documentation:**  
-  https://ftag-salt.docs.cern.ch/setup/
+  Please refer to the official SALT documentation for detailed setup instructions:
+  [**Official SALT documentation**](https://ftag-salt.docs.cern.ch/setup/)
 
 - **Umami preprocessing**  
   Used for preprocessing and fold splitting prior to training.
@@ -27,7 +25,7 @@ Please refer to the official SALT documentation for detailed setup instructions:
 The workflow assumes that:
 
 - `setup.sh` scripts for FastFrames, SALT, and Umami work when sourced manually
-- salt envrionments and packages are installed
+- SALT environments and packages are installed
 - Required CVMFS and ATLAS tools are available
 - EOS and AFS paths are accessible
 - HTCondor is available for batch submission
@@ -45,11 +43,11 @@ git clone https://github.com/Cecilia01atlas/cmse890-finale-project.git
 ```
 
 ### 3. Clone the required repositories
-This workflow relies the following four git repositories from the frag group, wich are hosted on GitLab:
-- fastframes
-- salt
-- dumper-to-salt
-- umami-preprocessing 
+This workflow relies on the following four git repositories provided by the ATLAS ftag group, which are hosted on GitLab:
+- fastframes  
+- salt  
+- dumper-to-salt  
+- umami-preprocessing   
 
 Access requires CERN credentials! 
 
@@ -109,11 +107,10 @@ Runs preprocessing over all folds:
 
 ---
 
-### 5. Create and activate all envrionments environment
+### 5. Activate the snakemake environment
 
 ```bash
-conda env create -f environment.yaml
-conda activate mva-workflow
+conda activate <envrionment-name>
 ```
 
 ### 6. Test the installation
