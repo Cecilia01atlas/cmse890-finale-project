@@ -1,18 +1,39 @@
-# workflow_config.yaml
-# Global paths for the workflow. Edit these to match your environment.
+# ==============================
+# USER / ENVIRONMENT
+# ==============================
+user: ceimthur
 
-fastframe_repo: /afs/cern.ch/user/c/ceimthur/sm4tops-fastframe
-fastframe_config: /afs/cern.ch/user/c/ceimthur/sm4tops-fastframe/SM4topsConfigs/Run3_config_DNN.yml
-custom_class: /afs/cern.ch/user/c/ceimthur/sm4tops-fastframe/SM4topsSSML
+afs_root: /afs/cern.ch/user/c/ceimthur
+eos_root: /eos/user/c/ceimthur
 
-# Where ntuples should be stored
-ntuples_eos_dir: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/ntuples
+# ==============================
+# PROJECT STRUCTURE
+# ==============================
+project_name: MVA_training_tutorial
+analysis_tag: baseline_first_try
 
+# ==============================
+# REPOSITORIES (relative to AFS)
+# ==============================
+repos:
+  fastframe: sm4tops-fastframe
+  umami: umami-preprocessing
+  dumper: dumper-to-salt
+
+# ==============================
+# FASTFRAME
+# ==============================
+fastframe:
+  config: SM4topsConfigs/Run3_config_DNN.yml
+  custom_class: SM4topsSSML
+
+# ==============================
+# SAMPLES
+# ==============================
 samples:
-  # - tttt
-  # - ttt
-  # - ttW
   - ttZ
+  # - tttt
+  # - ttW
   # - ttH
   # - SingleTop
   # - Diboson
@@ -20,23 +41,13 @@ samples:
   # - Other
   # - fake_inclusive
 
-h5_outputs:
-  tttt: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/tttt.h5
-  ttt: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttt.h5
-  ttW: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttW.h5
-  ttZ: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttZ.h5
-  ttH: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttH.h5
-  SingleTop: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/SingleTop.h5
-  Diboson: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/Diboson.h5
-  ttVV: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/ttVV.h5
-  Other: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/Other.h5
-  fake_inclusive: /eos/user/c/ceimthur/MVA_training_tutorial/baseline_first_try/output/Samples/fake_inclusive.h5
-
+# ==============================
+# UMAMI PREPROCESSING
+# ==============================
 folds:
   - fold0
   - fold1
   - fold2
   - fold3
 
-# Directory where fold configs for preprocessing live
-preprocessing_config_dir: /afs/cern.ch/user/c/ceimthur/umami-preprocessing/upp/configs/SM4top_Run3
+preprocessing_config_subdir: upp/configs/SM4top_Run3

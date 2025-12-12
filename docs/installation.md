@@ -1,6 +1,6 @@
 ## Installation
 
-Follow these steps to set up the SM4Tops workflow and its dependencies.
+In order to set up the SM4Tops workflow, follow these steps
 
 ### 1. Clone the workflow repository
 
@@ -11,10 +11,19 @@ git clone https://github.com/Cecilia01atlas/cmse890-finale-project.git
 ```
 
 ### 2. Clone the FastFrame repository
-This workflow relies on the FastFrames package to process MC samples. Access requires CERN credentials:  
+This workflow relies the following four git repositories from the frag group, wich are hosted on GitLab:
+- fastframes
+- salt
+- dumper-to-salt
+- umami-preprocessing 
+
+Access requires CERN credentials! 
 
 ```bash
 git clone https://gitlab.cern.ch/atlasphys-top/TopPlusX/ANA-TOPQ-2023-43/sm4tops-fastframe.git
+git clone https://gitlab.cern.ch/atlasphys-top/TopPlusX/ANA-TOPQ-2023-43/ftag-based-mva/salt.git
+git clone https://gitlab.cern.ch/atlasphys-top/TopPlusX/ANA-TOPQ-2023-43/ftag-based-mva/salt.git
+git clone https://gitlab.cern.ch/atlasphys-top/TopPlusX/ANA-TOPQ-2023-43/ftag-based-mva/umami-preprocessing.git
 ```
 
 **Note:** make sure to clone FastFrames into a directory that matches the path specified in the workflow configuration (workflow_config.yaml)  

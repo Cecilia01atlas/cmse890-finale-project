@@ -1,107 +1,137 @@
-default_target: all
+import os
+from pathlib import Path
 
 configfile: "workflow_config.yaml"
 
-FASTFRAME_REPO = config["fastframe_repo"]
-FASTFRAME_CONFIG = config["fastframe_config"]
-CUSTOM_CLASS = config["custom_class"]
-NTUPLES_DIR = config["ntuples_eos_dir"]
+# ==========================================================
+# PATH EXPANSION UTILITIES
+# ==========================================================
+
+def p(template):
+    """Expand config templates safely."""
+    return template.format(**config)
+
+AFS_ROOT = p(config["afs_root"])
+EOS_ROOT = p(config["eos_root"])
+
+PROJECT = config["project_name"]
+TAG = config["analysis_tag"]
+
+AFS_PROJECT = f"{AFS_ROOT}/{PROJECT}"
+EOS_PROJECT = f"{EOS_ROOT}/{PROJECT}"
+
+# ==========================================================
+# DERIVED PATHS
+# ==========================================================
+
+FASTFRAME_REPO = f"{AFS_ROOT}/{config['repos']['fastframe']}"
+DUMPER_REPO    = f"{AFS_ROOT}/{config['repos']['dumper']}"
+UMAMI_REPO     = f"{AFS_ROOT}/{config['repos']['umami']}"
+
+FASTFRAME_CONFIG = f"{FASTFRAME_REPO}/{config['fastframe']['config']}"
+CUSTOM_CLASS     = f"{FASTFRAME_REPO}/{config['fastframe']['custom_class']}"
+
+NTUPLES_DIR = f"{EOS_PROJECT}/{TAG}/ntuples"
+OUTPUT_DIR  = f"{EOS_PROJECT}/{TAG}/output"
+H5_DIR      = f"{OUTPUT_DIR}/Samples"
+
+CONF_DIR = f"{UMAMI_REPO}/{config['preprocessing_config_subdir']}"
+
 SAMPLES = config["samples"]
-CONF_DIR = config["preprocessing_config_dir"]
+FOLDS   = config["folds"]
 
-###########################################
-# MAIN TARGETS
-###########################################
+# ==========================================================
+# FINAL TARGET
+# ==========================================================
 
-# Full workflow (default)
 rule all:
     input:
         "flags/preprocessing.done"
 
-# Stage 1 target: ONLY submit ntuples and stop.
-rule stage1:
-    input:
-        "flags/ntuples_ready.flag"
+# ==========================================================
+# RULE 1 — SUBMIT FASTFRAME NTUPLES
+# ==========================================================
 
-
-###############################################
-# RULE 1 — Submit FastFrames Ntuple Jobs
-###############################################
 rule submit_ntuples:
     output:
-        touch("flags/ntuples_submitted.flag")
-    params:
-        ntuple_dir = NTUPLES_DIR
+        "flags/ntuples_submitted.flag"
     shell:
         """
-        if [ -d "{params.ntuple_dir}" ]; then
-            echo "[FASTFRAME] Ntuple directory already exists. Skipping submission."
+        mkdir -p flags logs
+
+        echo "[FASTFRAME] Checking ntuple directory:"
+        echo "  {NTUPLES_DIR}"
+
+        if [ -d "{NTUPLES_DIR}" ]; then
+            echo "[FASTFRAME] Ntuples already exist — skipping submission"
         else
-            echo "[FASTFRAME] Submitting ntuple jobs to Condor..."
+            echo "[FASTFRAME] Submitting FastFrames jobs"
             ./scripts/run_fastframe.sh logs
-            echo "[FASTFRAME] Submission done."
         fi
 
-        touch flags/ntuples_submitted.flag
+        touch {output}
         """
 
+# ==========================================================
+# RULE 2 — WAIT FOR NTUPLES (EOS / CONDOR)
+# ==========================================================
 
-###############################################
-# RULE 2 — Wait for ntuples to appear in EOS
-###############################################
 rule wait_for_ntuples:
     input:
         "flags/ntuples_submitted.flag"
     output:
-        touch("flags/ntuples_ready.flag")
-    params:
-        ntuple_dir = NTUPLES_DIR
+        "flags/ntuples_ready.flag"
     shell:
         """
-        echo "[WAIT] Checking for ntuples in {params.ntuple_dir}"
-        echo "[WAIT] Snakemake will pause here until directory appears."
-        while [ ! -d "{params.ntuple_dir}" ]; do
-            echo "[WAIT] Ntuples not found yet. Sleeping 60 seconds..."
+        echo "[WAIT] Waiting for ntuples in {NTUPLES_DIR}"
+
+        while [ ! -d "{NTUPLES_DIR}" ]; do
+            echo "[WAIT] Not ready yet — sleeping 60s"
             sleep 60
         done
-        echo "[WAIT] Ntuples found!"
-        touch flags/ntuples_ready.flag
+
+        echo "[WAIT] Ntuples found"
+        touch {output}
         """
 
+# ==========================================================
+# RULE 3 — DUMPER → SALT (PER SAMPLE)
+# ==========================================================
 
-###############################################
-# RULE 3 — Dumper-to-SALT for each sample
-###############################################
 rule run_dumper:
     input:
         "flags/ntuples_ready.flag"
     output:
         "flags/dumper_{sample}.done"
     params:
-        log_dir = "logs"
+        log_dir="logs"
     shell:
         """
         mkdir -p {params.log_dir}
-        echo "[DUMPER] Converting sample {wildcards.sample}"
+
+        echo "[DUMPER] Processing sample {wildcards.sample}"
         ./scripts/run_dumper.sh {params.log_dir} {wildcards.sample}
-        touch flags/dumper_{wildcards.sample}.done
+
+        touch {output}
         """
 
+# ==========================================================
+# RULE 4 — UMAMI PREPROCESSING (ALL FOLDS)
+# ==========================================================
 
-###############################################
-# RULE 4 — Umami preprocessing (all samples)
-###############################################
 rule run_preprocessing:
     input:
         expand("flags/dumper_{sample}.done", sample=SAMPLES)
     output:
-        touch("flags/preprocessing.done")
+        "flags/preprocessing.done"
     params:
-        log_dir = "logs"
+        log_dir="logs"
     shell:
         """
         mkdir -p {params.log_dir}
-        echo "[PREPROCESS] Running Umami preprocessing over all folds"
+
+        echo "[PREPROCESS] Running Umami preprocessing"
         ./scripts/run_preprocessing.sh {params.log_dir}
-        touch flags/preprocessing.done
+
+        touch {output}
         """
