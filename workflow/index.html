@@ -51,11 +51,33 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">Workflow Overview</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#snakemake-rules">Snakemake Rules</a>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-stages">Workflow Stages</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#example-snakemake-command">Example Snakemake Command</a>
+    <li class="toctree-l3"><a class="reference internal" href="#1-ntuple-production-fastframes">1. Ntuple Production (FastFrames)</a>
     </li>
         </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#this-step-is-asynchronous-once-jobs-are-submitted-execution-continues-only-after-ntuples-appear-in-eos">This step is asynchronous: once jobs are submitted, execution continues only after ntuples appear in EOS.</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#2-ntuple-availability-check">2. Ntuple Availability Check</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#3-conversion-to-hdf5-dumper-to-salt">3. Conversion to HDF5 (dumper-to-SALT)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#4-umami-preprocessing">4. Umami Preprocessing</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#workflow-state-tracking-flag-files">Workflow State Tracking (Flag Files)</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#important">Important</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#helper-scripts">Helper Scripts</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#snakemake-rules">Snakemake Rules</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#example-snakemake-command">Example Snakemake Command</a>
     </li>
     </ul>
                 </li>
@@ -88,22 +110,92 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="workflow-overview">Workflow Overview</h1>
-<p>The workflow is structured as a <strong>Snakemake DAG</strong>:</p>
-<p><strong>1. Produce Ntuples:</strong>  </p>
+<p>This project implements a <strong>multi-stage Snakemake workflow</strong> designed to prepare inputs for an MVA training using four-top Monte Carlo samples. This is being accomplished by using external tools like FastFrames, Salt and Umami.</p>
+<p>The entire workflow is structured as a <strong>Snakemake DAG</strong>:</p>
+<hr />
+<h2 id="workflow-stages">Workflow Stages</h2>
+<h3 id="1-ntuple-production-fastframes">1. Ntuple Production (FastFrames)</h3>
 <ul>
-<li>Reads the FastFrames configuration (<code>Run3_config_DNN.yml</code>)</li>
-<li>Submits jobs to HTCondor to store ntuples</li>
-<li>Stores ntuples in EOS space</li>
+<li>Reads a FastFrames configuration (e.g. <code>Run3_config_DNN.yml</code>)</li>
+<li>Submits ntuple production jobs to <strong>HTCondor</strong></li>
+<li>Stores ntuples in <strong>EOS</strong></li>
+<li>Skips submission automatically if the ntuple directory already exists</li>
 </ul>
-<p><strong>2. Other steps:</strong>  <br />
-   Will be added later</p>
+<h2 id="this-step-is-asynchronous-once-jobs-are-submitted-execution-continues-only-after-ntuples-appear-in-eos">This step is asynchronous: once jobs are submitted, execution continues only after ntuples appear in EOS.</h2>
+<h3 id="2-ntuple-availability-check">2. Ntuple Availability Check</h3>
+<ul>
+<li>Periodically checks for the presence of the ntuple directory in EOS</li>
+<li>Handles EOS/AFS latency explicitly</li>
+<li>Acts as a synchronization point between batch production and local processing</li>
+</ul>
+<p>This allows the workflow to be stopped and resumed safely.</p>
+<hr />
+<h3 id="3-conversion-to-hdf5-dumper-to-salt">3. Conversion to HDF5 (dumper-to-SALT)</h3>
+<ul>
+<li>Converts FastFrames ntuples into <code>.h5</code> files</li>
+<li>Runs once per sample</li>
+<li>Produces sample-level completion flags to ensure reproducibility</li>
+</ul>
+<hr />
+<h3 id="4-umami-preprocessing">4. Umami Preprocessing</h3>
+<ul>
+<li>Runs preprocessing using Umami configuration files</li>
+<li>Processes all folds defined in the preprocessing configuration</li>
+<li>Produces preprocessed datasets ready for MVA training</li>
+</ul>
+<hr />
+<h2 id="workflow-state-tracking-flag-files">Workflow State Tracking (Flag Files)</h2>
+<p>This workflow uses <strong>flag files</strong> (stored in the <code>flags/</code> directory) to track progress between stages.</p>
+<p>Each major step creates a <code>.flag</code> or <code>.done</code> file once it has completed successfully.<br />
+These files allow Snakemake to:</p>
+<ul>
+<li>Resume the workflow after interruptions</li>
+<li>Avoid re-running long or expensive steps</li>
+<li>Synchronize asynchronous batch jobs (e.g. HTCondor submissions)</li>
+</ul>
+<h3 id="important">Important</h3>
+<p>If you want to <strong>re-run parts of the workflow</strong>, the corresponding flag files must be removed manually.</p>
+<h2 id="helper-scripts">Helper Scripts</h2>
+<p>Several workflow steps are executed via small wrapper scripts located in the <code>scripts/</code> directory:</p>
+<ul>
+<li><code>run_fastframe.sh</code> — submits FastFrames ntuple jobs</li>
+<li><code>run_dumper.sh</code> — converts ntuples to HDF5 using dumper-to-SALT</li>
+<li><code>run_preprocessing.sh</code> — runs Umami preprocessing</li>
+</ul>
+<p>These scripts must be executable. If you encounter permission errors, run:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>chmod<span class="w"> </span>+x<span class="w"> </span>scripts/*.sh
+</span></code></pre></div>
 <h2 id="snakemake-rules">Snakemake Rules</h2>
+<p>Key rules in the workflow include:</p>
 <ul>
-<li><code>all</code>: Entry point, checks ntuple outputs</li>
-<li><code>produce_ntuples</code>: Submits FastFrames jobs</li>
+<li>
+<p><code>submit_ntuples</code><br />
+  Submits FastFrames jobs (or skips if outputs already exist)</p>
+</li>
+<li>
+<p><code>wait_for_ntuples</code><br />
+  Blocks execution until ntuples are available in EOS</p>
+</li>
+<li>
+<p><code>run_dumper</code><br />
+  Converts ntuples to HDF5 format per sample</p>
+</li>
+<li>
+<p><code>run_preprocessing</code><br />
+  Runs Umami preprocessing once all inputs are ready</p>
+</li>
+<li>
+<p><code>all</code><br />
+  Default entry point that executes the full workflow</p>
+</li>
 </ul>
-<h3 id="example-snakemake-command">Example Snakemake Command</h3>
-<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>snakemake<span class="w"> </span>-j1<span class="w"> </span>-p
+<hr />
+<h2 id="example-snakemake-command">Example Snakemake Command</h2>
+<p>To run the full workflow:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>snakemake<span class="w"> </span>-j1<span class="w"> </span>--latency-wait<span class="w"> </span><span class="m">60</span>
+</span></code></pre></div>
+<p>To execute only the initial stage (ntuple submission and availability check):</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>snakemake<span class="w"> </span>stage1-j1<span class="w"> </span>--latency-wait<span class="w"> </span><span class="m">60</span>
 </span></code></pre></div>
               
             </div>
